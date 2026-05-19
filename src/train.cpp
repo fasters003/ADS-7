@@ -5,7 +5,6 @@ Train::Train() : countOp(0), first(nullptr) {}
 
 void Train::addCar(bool light) {
   Car *newCar = new Car{light, nullptr, nullptr};
-
   if (first == nullptr) {
     first = newCar;
     first->next = first;
@@ -22,56 +21,31 @@ int Train::getLength() {
   if (first == nullptr) return 0;
 
   countOp = 0;
-  int length = 0;
-
   first->light = true;
-  Car *current = first->next;
-  countOp++;
-  length = 1;
+  Car *current = first;
 
-  while (current->light == false) {
-    current = current->next;
-    countOp++;
-    length++;
-  }
+  while (true) {
+    int stepsToNextLight = 0;
 
-  if (current == first) {
-    if (first->next->light == false) {
-      current = first;
-      for (int i = 0; i < length; i++) {
-        current->light = false;
-        current = current->next;
-        countOp++;
-      }
-      return length;
-    }
-  } else {
-    current->light = false;
-    current = current->next;
-    countOp++;
-    length++;
-
-    while (current != first) {
-      if (current->light == true) {
-        current->light = false;
-      }
+    do {
       current = current->next;
       countOp++;
-      length++;
+      stepsToNextLight++;
+    } while (!current->light);
+
+    current->light = false;
+
+    Car *temp = current;
+    for (int i = 0; i < stepsToNextLight; i++) {
+      temp = temp->prev;
+      countOp++;
     }
+
+    if (!temp->light) {
+      return stepsToNextLight;
+    }
+    current = temp;
   }
-
-  current = first->next;
-  countOp++;
-  for (int i = 1; i < length; i++) {
-    current->light = true;
-    current = current->next;
-    countOp++;
-  }
-
-  first->light = false;
-
-  return length;
 }
 
 int Train::getOpCount() {
