@@ -24,71 +24,50 @@ int Train::getLength() {
   countOp = 0;
   int length = 0;
 
-  bool allOn = true;
-  Car *check = first;
-  do {
-    if (check->light == false) {
-      allOn = false;
-      break;
-    }
-    check = check->next;
-  } while (check != first);
+  first->light = true;
+  Car *current = first->next;
+  countOp++;
+  length = 1;
 
-  if (!allOn) {
-    first->light = true;
-    Car *current = first->next;
+  while (current->light == false) {
+    current = current->next;
     countOp++;
-    length = 1;
+    length++;
+  }
 
-    while (current->light == false) {
-      current = current->next;
-      countOp++;
-      length++;
-    }
-
-    if (current == first) {
-      current = first;
-      for (int i = 0; i < length; i++) {
-        current->light = false;
-        current = current->next;
-        countOp++;
-      }
-    } else {
-      current->light = false;
-      current = current->next;
-      countOp++;
-      length++;
-
-      while (current != first) {
-        if (current->light == true) {
-          current->light = false;
-        }
-        current = current->next;
-        countOp++;
-        length++;
-      }
-      first->light = false;
-    }
-  } else {
-    first->light = false;
-    Car *current = first->next;
-    countOp++;
-    length = 1;
-
-    while (current != first) {
-      current->light = false;
-      current = current->next;
-      countOp++;
-      length++;
-    }
-
+  if (current == first) {
     current = first;
     for (int i = 0; i < length; i++) {
-      current->light = true;
+      current->light = false;
       current = current->next;
       countOp++;
     }
+    return length;
   }
+
+  current->light = false;
+  current = current->next;
+  countOp++;
+  length++;
+
+  while (current != first) {
+    if (current->light == true) {
+      current->light = false;
+    }
+    current = current->next;
+    countOp++;
+    length++;
+  }
+
+  current = first->next;
+  countOp++;
+  for (int i = 1; i < length; i++) {
+    current->light = true;
+    current = current->next;
+    countOp++;
+  }
+
+  first->light = false;
 
   return length;
 }
