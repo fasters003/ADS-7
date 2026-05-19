@@ -5,7 +5,7 @@ Train::Train() : countOp(0), first(nullptr) {}
 
 void Train::addCar(bool light) {
   Car *newCar = new Car{light, nullptr, nullptr};
-  
+
   if (first == nullptr) {
     first = newCar;
     first->next = first;
@@ -21,35 +21,34 @@ void Train::addCar(bool light) {
 int Train::getLength() {
   if (first == nullptr) return 0;
   if (first->next == first) return 1;
-  
+
   countOp = 0;
-  
-  // Запоминаем начальное состояние света
-  bool initialState = first->light;
-  
-  // Включаем свет в начальном вагоне (помечаем его)
-  first->light = true;
-  
-  // Переходим в следующий вагон
-  Car *current = first->next;
-  countOp++;
-  
-  int length = 1;
-  
-  // Идем по кругу, выключая свет во всех вагонах
-  while (current != first) {
-    if (current->light == true) {
-      current->light = false;
-    }
-    
+
+  first->light = false;
+  Car *current = first;
+
+  int length = 0;
+  do {
     current = current->next;
     countOp++;
     length++;
+  } while (current != first);
+
+  do {
+    current->light = true;
+    current = current->next;
+    countOp++;
+  } while (current != first);
+
+  int count = 0;
+  while (current->light == false) {
+    current = current->next;
+    countOp++;
+    count++;
   }
-  
-  // Восстанавливаем начальное состояние первого вагона
-  first->light = initialState;
-  
+
+  current->light = false;
+
   return length;
 }
 
