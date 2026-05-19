@@ -24,45 +24,82 @@ int Train::getLength() {
     countOp = 0;
     int length = 0;
 
-    first->light = true;
+    bool initialState = first->light;
+    
+    if (initialState == false) {
+        first->light = true;
 
-    Car *current = first->next;
-    countOp++;
-
-    length = 1;
-    while (current->light == false) {
-        current = current->next;
+        Car *current = first->next;
         countOp++;
-        length++;
-    }
+        length = 1;
 
-    if (current == first) {
-        current = first;
-        for (int i = 0; i < length; i++) {
-            current->light = false;
+        while (current->light == false) {
             current = current->next;
             countOp++;
+            length++;
         }
-    } else {
-        current->light = false;
-        current = current->next;
-        countOp++;
-        length++;
 
-        while (current != first) {
-            if (current->light == true) {
+        if (current == first) {
+            current = first;
+            for (int i = 0; i < length; i++) {
                 current->light = false;
                 current = current->next;
                 countOp++;
-                length++;
-            } else {
+            }
+        } else {
+            current->light = false;
+            current = current->next;
+            countOp++;
+            length++;
+
+            while (current != first) {
+                if (current->light == true) {
+                    current->light = false;
+                }
                 current = current->next;
                 countOp++;
                 length++;
             }
+
+            first->light = false;
+        }
+    } else {
+        first->light = false;
+
+        Car *current = first->next;
+        countOp++;
+        length = 1;
+
+        while (current->light == true) {
+            current = current->next;
+            countOp++;
+            length++;
         }
 
-        first->light = false;
+        if (current == first) {
+            current = first;
+            for (int i = 0; i < length; i++) {
+                current->light = true;
+                current = current->next;
+                countOp++;
+            }
+        } else {
+            current->light = true;
+            current = current->next;
+            countOp++;
+            length++;
+
+            while (current != first) {
+                if (current->light == false) {
+                    current->light = true;
+                }
+                current = current->next;
+                countOp++;
+                length++;
+            }
+
+            first->light = true;
+        }
     }
 
     return length;
