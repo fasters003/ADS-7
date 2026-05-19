@@ -36,26 +36,29 @@ int Train::getLength() {
   }
 
   if (current == first) {
-    current = first;
-    for (int i = 0; i < length; i++) {
-      current->light = false;
-      current = current->next;
-      countOp++;
+    if (first->next->light == false) {
+      current = first;
+      for (int i = 0; i < length; i++) {
+        current->light = false;
+        current = current->next;
+        countOp++;
+      }
+      return length;
     }
-    return length;
-  }
-
-  current->light = false;
-  current = current->next;
-  countOp++;
-
-  while (current != first) {
-    length++;
-    if (current->light == true) {
-      current->light = false;
-    }
+  } else {
+    current->light = false;
     current = current->next;
     countOp++;
+    length++;
+
+    while (current != first) {
+      if (current->light == true) {
+        current->light = false;
+      }
+      current = current->next;
+      countOp++;
+      length++;
+    }
   }
 
   current = first->next;
