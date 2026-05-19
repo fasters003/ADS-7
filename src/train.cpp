@@ -40,9 +40,7 @@ int Train::getLength() {
 
   int length = 1;
   while (current != start) {
-    if (current->light == true) {
-      current->light = false;
-    }
+    current->light = false;
     current = current->next;
     countOp++;
     length++;
